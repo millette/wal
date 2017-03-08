@@ -1,0 +1,10 @@
+{
+  "name": "wal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "dependencies": {
+    "chokidar": "^1.6.1",
+    "couchdb-change-events": "^2.1.1"
+  }
+}
