@@ -1,10 +1,16 @@
 {
   "name": "wal",
-  "version": "1.0.0",
+  "version": "0.0.0",
   "main": "index.js",
-  "license": "MIT",
+  "scripts": {
+    "lint": "standard"
+  },
   "dependencies": {
     "chokidar": "^1.6.1",
-    "couchdb-change-events": "^2.1.1"
+    "couchdb-change-events": "^2.1.1",
+    "dotenv-safe": "^4.0.3"
+  },
+  "devDependencies": {
+    "standard": "^9.0.1"
   }
 }
