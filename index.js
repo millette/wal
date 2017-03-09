@@ -49,19 +49,19 @@ const setupCouch = (watcher) => {
   if (process.env.PASSWORD) { options.password = process.env.PASSWORD }
   const couchdbEvents = new CouchdbChangeEvents(options)
   return new Promise((resolve, reject) => {
-    let timer
+    // let timer
     const datas = []
     const ready = (status) => {
       if (status === 'connected') {
         couchdbEvents.removeListener('couchdb_error', reject)
         couchdbEvents.removeListener('couchdb_status', ready)
-        clearTimeout(timer)
+        // clearTimeout(timer)
         return resolve({ dataQueue, datas, watcher, couchdbEvents })
       }
       if (status === 'disconnected') {
         couchdbEvents.removeListener('couchdb_status', ready)
         couchdbEvents.removeListener('couchdb_error', reject)
-        clearTimeout(timer)
+        // clearTimeout(timer)
         return reject(new Error('Disconnected at start.'))
       }
       console.error('unexpected status:', status)
@@ -70,11 +70,13 @@ const setupCouch = (watcher) => {
     couchdbEvents.on('data', dataQueue)
     couchdbEvents.on('couchdb_status', ready)
     couchdbEvents.once('couchdb_error', reject)
+    /*
     timer = setTimeout(() => {
       couchdbEvents.removeListener('couchdb_error', reject)
       couchdbEvents.removeListener('couchdb_status', ready)
       reject(new Error('Connect timeout.'))
     }, 20000)
+    */
   })
 }
 
