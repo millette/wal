@@ -280,9 +280,9 @@ core-util-is@~1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/core-util-is/-/core-util-is-1.0.2.tgz#b5fd54220aa2bc5ab57aab7140c940754503c1a7"
 
-couchdb-change-events@^2.1.1:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/couchdb-change-events/-/couchdb-change-events-2.1.1.tgz#ea31093ffe665b04287b92d0e38e15aaaf059c1c"
+couchdb-change-events@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/couchdb-change-events/-/couchdb-change-events-2.2.0.tgz#1597538f42081c515d75c7f1f1678d4d74807131"
 
 create-error-class@^3.0.0:
   version "3.0.2"

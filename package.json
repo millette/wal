@@ -8,7 +8,7 @@
   "dependencies": {
     "async-lru": "^1.1.1",
     "chokidar": "^1.6.1",
-    "couchdb-change-events": "^2.1.1",
+    "couchdb-change-events": "^2.2.0",
     "dotenv-safe": "^4.0.3",
     "got": "^6.7.1",
     "json-stable-stringify": "^1.0.1",
