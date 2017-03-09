@@ -53,12 +53,14 @@ const setupCouch = (watcher) => {
     const datas = []
     const ready = (status) => {
       if (status === 'connected') {
+        couchdbEvents.removeListener('couchdb_error', reject)
         couchdbEvents.removeListener('couchdb_status', ready)
         clearTimeout(timer)
         return resolve({ dataQueue, datas, watcher, couchdbEvents })
       }
       if (status === 'disconnected') {
         couchdbEvents.removeListener('couchdb_status', ready)
+        couchdbEvents.removeListener('couchdb_error', reject)
         clearTimeout(timer)
         return reject(new Error('Disconnected at start.'))
       }
@@ -67,10 +69,12 @@ const setupCouch = (watcher) => {
     const dataQueue = (data) => datas.push(data)
     couchdbEvents.on('data', dataQueue)
     couchdbEvents.on('couchdb_status', ready)
+    couchdbEvents.once('couchdb_error', reject)
     timer = setTimeout(() => {
+      couchdbEvents.removeListener('couchdb_error', reject)
       couchdbEvents.removeListener('couchdb_status', ready)
       reject(new Error('Connect timeout.'))
-    }, 2000)
+    }, 20000)
   })
 }
 

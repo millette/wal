@@ -35,7 +35,7 @@ const verify = (x) => {
   const an = x.watcher.eventNames().sort()
   const bn = x.couchdbEvents.eventNames().sort()
   const ae = ['add', 'change', 'error', 'unlink']
-  const be = ['couchdb_status', 'data', 'error']
+  const be = ['couchdb_status', 'data', 'couchdb_error']
   const extraA = diff(an, ae)
   const extraB = diff(bn, be)
   const missingA = diff(ae, an)
