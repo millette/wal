@@ -2,59 +2,33 @@
 
 // npm
 require('dotenv-safe').load({ allowEmptyValues: true })
+const diff = require('lodash.difference')
+
 if (!process.env.DB) {
   console.error('Required env variable: DB.')
   process.exit(1)
 }
 
-const diff = require('lodash.difference')
+if (!process.env.WATCH) {
+  console.error('Required env variable: WATCH.')
+  process.exit(1)
+}
 
 // self
 const wal = require('.')
+const handlers = require('./lib/handlers')
 
-const doData = (d) => {
-  console.log('\ndata:', d)
-}
-
-const processQueue = (x) => {
-  x.couchdbEvents.on('data', doData)
-  x.couchdbEvents.removeListener('data', x.dataQueue)
-  x.datas.forEach(doData)
+const setupHandlers = (x) => {
+  const watcher = x.watcher
+  const couchdbEvents = x.couchdbEvents
+  let r
+  for (r in handlers.watcher) { watcher.on(r, handlers.watcher[r]) }
+  for (r in handlers.couchdbEvents) { couchdbEvents.on(r, handlers.couchdbEvents[r]) }
+  couchdbEvents.removeListener('data', x.dataQueue)
+  x.datas.forEach(handlers.couchdbEvents.data)
   delete x.datas
   delete x.dataQueue
   return x
-}
-
-const goOn = (x) => {
-  console.log('go on...')
-  const watcher = x.watcher
-  const couchdbEvents = x.couchdbEvents
-
-  watcher.on('error', (error) => {
-    console.error('\nerror:', error)
-  })
-
-  watcher.on('add', (path, stats) => {
-    console.log(`\nadd ${path}`, stats)
-  })
-
-  watcher.on('change', (path, stats) => {
-    console.log(`\nchange ${path}`, stats)
-  })
-
-  watcher.on('unlink', (path) => {
-    console.log(`\nunlink ${path}`)
-  })
-
-  couchdbEvents.on('couchdb_status', (status) => {
-    console.log('\nstatus:', status)
-  })
-
-  couchdbEvents.on('error', (error) => {
-    console.error('\nerror:', error)
-  })
-
-  return processQueue(x)
 }
 
 const verify = (x) => {
@@ -69,24 +43,27 @@ const verify = (x) => {
   const a = an.filter((name) => x.watcher.listeners(name).length !== 1)
   const b = bn.filter((name) => x.couchdbEvents.listeners(name).length !== 1)
 
-  if (a.length || b.length || extraA.length || extraB.length || missingA.length || missingB.length) {
-    const err = new Error('Wrong listener config.')
-    err.data = {}
-    if (a.length) { err.data.watcher = a }
-    if (extraA.length) { err.data.watcherExtra = extraA }
-    if (missingA.length) { err.data.watcherMissing = missingA }
-    if (b.length) { err.data.couchdbEvents = b }
-    if (extraB.length) { err.data.couchdbEventsExtra = extraB }
-    if (missingB.length) { err.data.couchdbEventsMissing = missingB }
-    return Promise.reject(err)
-  }
-  return x
+  if (!a.length && !extraA.length && !missingA.length &&
+      !b.length && !extraB.length && !missingB.length) { return x }
+
+  const err = new Error('Wrong listener config.')
+  if (a.length) { err.watcher = a }
+  if (extraA.length) { err.watcherExtra = extraA }
+  if (missingA.length) { err.watcherMissing = missingA }
+  if (b.length) { err.couchdbEvents = b }
+  if (extraB.length) { err.couchdbEventsExtra = extraB }
+  if (missingB.length) { err.couchdbEventsMissing = missingB }
+  return Promise.reject(err)
 }
 
-wal.setupWatcher('data/**/*.json')
+wal.setupWatcher(process.env.WATCH)
   .then(wal.setupCouch)
-  .then(goOn)
+  .then(setupHandlers)
   .then(verify)
+  .then((x) => {
+    console.log('Awaiting...')
+    return x
+  })
   .catch((e) => {
     console.error(e)
     process.exit(1)
