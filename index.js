@@ -5,7 +5,10 @@ const chokidar = require('chokidar')
 const CouchdbChangeEvents = require('couchdb-change-events')
 
 const setupWatcher = (p) => {
-  const watcher = chokidar.watch(p, {
+  const p1 = [process.cwd(), p, '**', '*.json'].join('/')
+  const p2 = [process.cwd(), p, '*.json'].join('/')
+
+  const watcher = chokidar.watch([p1, p2], {
     ignoreInitial: true,
     followSymlinks: false,
     alwaysStat: true,
