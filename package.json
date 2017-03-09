@@ -8,7 +8,8 @@
   "dependencies": {
     "chokidar": "^1.6.1",
     "couchdb-change-events": "^2.1.1",
-    "dotenv-safe": "^4.0.3"
+    "dotenv-safe": "^4.0.3",
+    "lodash.difference": "^4.5.0"
   },
   "devDependencies": {
     "standard": "^9.0.1"
