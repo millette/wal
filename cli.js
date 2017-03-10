@@ -18,6 +18,28 @@ if (!process.env.WATCH) {
 const wal = require('.')
 const handlers = require('./lib/handlers')
 
+/*
+const zzzabc = require('./lib/lru')
+
+const zzz = zzzabc.zzz
+
+const lruX = zzz()
+const lruGet = lruX.lruGet
+const lruSet = lruX.lruSet
+
+lruGet([__dirname, 'data2/amero667.json'].join('/'))
+  .then((x) => {
+    console.log('x:', x)
+    return x
+  })
+  .then((x) => {
+    lruGet([__dirname, 'data2/amero667.json'].join('/'))
+      .then((y) => {
+        console.log('y:', x)
+      })
+  })
+*/
+
 const setupHandlers = (x) => {
   const watcher = x.watcher
   const couchdbEvents = x.couchdbEvents
