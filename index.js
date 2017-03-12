@@ -39,7 +39,7 @@ const setupWatcher = (p) => {
 
 const setupCouch = (watcher) => {
   const options = {
-    // lastEventId: 'abcd...',
+    lastEventId: 28,
     host: process.env.HOST || 'localhost',
     port: process.env.PORT || 5984,
     protocol: process.env.PROTOCOL || 'http',
